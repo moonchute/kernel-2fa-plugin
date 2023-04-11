@@ -19,11 +19,24 @@ function getAccounts (): string[] | { mnemonic: string} {
 }
 
 const config: HardhatUserConfig = {
-  solidity: {
-  version: '0.8.17',
-  settings: {
-    optimizer: { enabled: true, runs: 1000000 },
-    viaIR: true
+  solidity: "0.8.18",
+  networks: {
+    mumbai: {
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_ID}`,
+      accounts: getAccounts(),
+    },
+    polygon: {
+      url: `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+      accounts: getAccounts(),
+    },
+    ethereum: {
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+      accounts: getAccounts(),
+    },
+    avalanche: {
+      url: `https://avalanche-mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+      accounts: getAccounts(),
+    },
   }
 }
 };
