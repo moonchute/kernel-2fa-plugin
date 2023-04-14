@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol";
 import "./plugin/IPlugin.sol";
 import "account-abstraction/core/Helpers.sol";
+import {EntryPoint} from  "account-abstraction/core/EntryPoint.sol";
 import "account-abstraction/interfaces/IAccount.sol";
 import "account-abstraction/interfaces/IEntryPoint.sol";
 import {EntryPoint} from  "account-abstraction/core/EntryPoint.sol";
