@@ -251,6 +251,11 @@ export declare class IEntryPoint__factory {
         readonly type: "event";
     }, {
         readonly anonymous: false;
+        readonly inputs: readonly [];
+        readonly name: "BeforeExecution";
+        readonly type: "event";
+    }, {
+        readonly anonymous: false;
         readonly inputs: readonly [{
             readonly indexed: true;
             readonly internalType: "address";
@@ -485,6 +490,24 @@ export declare class IEntryPoint__factory {
         readonly type: "function";
     }, {
         readonly inputs: readonly [{
+            readonly internalType: "address";
+            readonly name: "sender";
+            readonly type: "address";
+        }, {
+            readonly internalType: "uint192";
+            readonly name: "key";
+            readonly type: "uint192";
+        }];
+        readonly name: "getNonce";
+        readonly outputs: readonly [{
+            readonly internalType: "uint256";
+            readonly name: "nonce";
+            readonly type: "uint256";
+        }];
+        readonly stateMutability: "view";
+        readonly type: "function";
+    }, {
+        readonly inputs: readonly [{
             readonly internalType: "bytes";
             readonly name: "initCode";
             readonly type: "bytes";
@@ -680,6 +703,16 @@ export declare class IEntryPoint__factory {
             readonly type: "address";
         }];
         readonly name: "handleOps";
+        readonly outputs: readonly [];
+        readonly stateMutability: "nonpayable";
+        readonly type: "function";
+    }, {
+        readonly inputs: readonly [{
+            readonly internalType: "uint192";
+            readonly name: "key";
+            readonly type: "uint192";
+        }];
+        readonly name: "incrementNonce";
         readonly outputs: readonly [];
         readonly stateMutability: "nonpayable";
         readonly type: "function";

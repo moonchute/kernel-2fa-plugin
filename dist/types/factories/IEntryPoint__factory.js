@@ -330,6 +330,12 @@ var _abi = [
     },
     {
         anonymous: false,
+        inputs: [],
+        name: "BeforeExecution",
+        type: "event",
+    },
+    {
+        anonymous: false,
         inputs: [
             {
                 indexed: true,
@@ -628,6 +634,30 @@ var _abi = [
     {
         inputs: [
             {
+                internalType: "address",
+                name: "sender",
+                type: "address",
+            },
+            {
+                internalType: "uint192",
+                name: "key",
+                type: "uint192",
+            },
+        ],
+        name: "getNonce",
+        outputs: [
+            {
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+            },
+        ],
+        stateMutability: "view",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
                 internalType: "bytes",
                 name: "initCode",
                 type: "bytes",
@@ -877,6 +907,19 @@ var _abi = [
             },
         ],
         name: "handleOps",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "uint192",
+                name: "key",
+                type: "uint192",
+            },
+        ],
+        name: "incrementNonce",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
