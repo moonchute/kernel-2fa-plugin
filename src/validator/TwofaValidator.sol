@@ -54,7 +54,7 @@ contract TwofaValidator is IKernelValidator {
 
     function validateSignature(bytes32 hash, bytes calldata signature) public view override returns (uint256) {
         address owner = twofaValidatorStorage[msg.sender].owner;
-        address twofa = twofaValidatorStorage[msg.sender].owner;
+        address twofa = twofaValidatorStorage[msg.sender].twofaAddress;
         bytes memory sigByOwner = signature[0:65];
         bytes memory sigByTwofa = signature[65:130];
 
