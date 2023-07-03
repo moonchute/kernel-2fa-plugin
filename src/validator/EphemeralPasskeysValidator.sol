@@ -12,7 +12,7 @@ struct PasskeysValidatorStorage {
   uint256 passkeysPublicKeyY;
 }
 
-contract PasskeysValidator is IKernelValidator {
+contract EphemeralPasskeysValidator is IKernelValidator {
     event PassKeysAddressSet(
         address indexed kernel,
         uint256 passKeysPublicKeyX,

@@ -21,7 +21,7 @@ struct EphemeralValidatorStorage {
   uint48 validUntil;
 }
 
-contract PasskeysValidator is IKernelValidator {
+contract TwoFAPasskeysValidator is IKernelValidator {
     event PassKeysAddressSet(
         address indexed kernel,
         address indexed owner,
@@ -65,6 +65,7 @@ contract PasskeysValidator is IKernelValidator {
         address validator = address(bytes20(_data[0:20]));
         uint48 validAfter = uint48(bytes6(_data[20:26]));
         uint48 validUntil = uint48(bytes6(_data[26:32]));
+
         ephemeraValidatorStorage[msg.sender] = EphemeralValidatorStorage(
             IKernelValidator(validator),
             validAfter,
@@ -96,8 +97,8 @@ contract PasskeysValidator is IKernelValidator {
 
         bytes memory sigByOwner = _userOp.signature[0:65];
         bytes calldata sigByPasskeys = _userOp.signature[65:129];
-        address owner = passkeysValidatorStorage[_userOp.sender].owner;
 
+        address owner = passkeysValidatorStorage[_userOp.sender].owner;
         bytes32 hash = ECDSA.toEthSignedMessageHash(_userOpHash);
         address recoveredOwner = ECDSA.recover(hash, sigByOwner);
 
