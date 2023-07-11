@@ -9,4 +9,8 @@ cbor_metadata = false
 optimize = true
 runs = 1000000
 
+[rpc_endpoints]
+anvil = "${ANVIL_RPC_URL}"
+mumbai = "${MUMBAI_RPC_URL}"
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

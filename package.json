@@ -5,7 +5,8 @@
   "version": "4.0.0-beta.14",
   "scripts": {
     "prepack": "./scripts/prepack-contracts-package.sh",
-    "postpack": "./scripts/postpack-contracts-package.sh"
+    "postpack": "./scripts/postpack-contracts-package.sh",
+    "deploy:anvil": "forge script scripts/DeployMoonChuteAnvil.s.sol --broadcast -f anvil -vvv"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-foundry": "^1.0.0",

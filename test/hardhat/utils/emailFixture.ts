@@ -5,87 +5,27 @@ export const kernelFixture = async () => {
 
   const EntryPointFactory = await ethers.getContractFactory("EntryPoint");
   const KernelFacFactory = await ethers.getContractFactory("KernelFactory");
-  const PasskeysValidatorFactory = await ethers.getContractFactory(
-    "TwoFAPasskeysValidator"
+  const EmailValidatorFactory = await ethers.getContractFactory(
+    "TwoFAEmailValidator"
   );
-  const ECDSAValidatorFactory = await ethers.getContractFactory(
-    "ECDSAValidator"
-  )
   const ephemeralValidatorFactory = await ethers.getContractFactory(
     "EphemeralPasskeysValidator"
   )
-  const SampleNFTFactory = await ethers.getContractFactory("SampleNFT");
 
   const entryPoint = await EntryPointFactory.deploy();
   const factory = await KernelFacFactory.deploy(entryPoint.address);
-  const validator = await PasskeysValidatorFactory.deploy();  
+  const validator = await EmailValidatorFactory.deploy();  
   const ephemeralPasskeys = await ephemeralValidatorFactory.deploy();
-  const ecdsaValidator = await ECDSAValidatorFactory.deploy();
-  const sampleNFT = await SampleNFTFactory.deploy();
   let kernel = '';
-
-  const createECDSAKernel = async (
-    owner: any, 
-  ) => {
-    const _data = ethers.utils.concat([
-        ethers.utils.arrayify(owner.address)
-    ]);
-    const createTx = await factory.connect(owner).createAccount(
-      ecdsaValidator.address,
-      _data,
-      0
-    );
-    const res = await createTx.wait();
-    const event = res.events?.find((e: any) => e.eventSignature === "AccountCreated(address,address,bytes,uint256)");
-    if (event?.topics[1]) {
-      return '0x' + event?.topics[1]?.slice(26,)
-    }
-  }
-
-  const createKernel = async (
-    owner: any, 
-    passkeysPubX: string, 
-    passkeysPubY: string,
-    origin: string,
-    authData: string
-  ) => {
-    const _data = ethers.utils.concat([
-        ethers.utils.arrayify(owner.address),
-        ethers.utils.arrayify(passkeysPubX),
-        ethers.utils.arrayify(passkeysPubY),
-        Buffer.from([origin.length]),
-        Buffer.from(origin),
-        Buffer.from([ethers.utils.arrayify(authData).length]),
-        ethers.utils.arrayify(authData)
-    ]);
-    const createTx = await factory.connect(owner).createAccount(
-      validator.address,
-      _data,
-      0
-    );
-    const res = await createTx.wait();
-    const event = res.events?.find((e: any) => e.eventSignature === "AccountCreated(address,address,bytes,uint256)");
-    if (event?.topics[1]) {
-      kernel = '0x' + event?.topics[1]?.slice(26,)
-    }
-  }
 
   const getInitCode = (
     owner: string,
-    passkeysPubX: string,
-    passkeysPubY: string,
-    origin: string,
-    authData: string,
+    emailTwofa: string
   ) => {
     const abiCoder = ethers.utils.defaultAbiCoder;
     const createAccountData = ethers.utils.concat([
       ethers.utils.arrayify(owner),
-      ethers.utils.arrayify(passkeysPubX),
-      ethers.utils.arrayify(passkeysPubY),
-      Buffer.from([origin.length]),
-      Buffer.from(origin),
-      Buffer.from([ethers.utils.arrayify(authData).length]),
-      ethers.utils.arrayify(authData)
+      ethers.utils.arrayify(emailTwofa),
     ]);
 
     return ethers.utils.solidityPack(
@@ -109,7 +49,7 @@ export const kernelFixture = async () => {
       initCode: index === 0 && initCode ? initCode : '0x',
       sender,
       nonce: nonce + index,
-      callData: ethers.utils.hexlify(d),
+      callData: d,
       callGasLimit: 10000000,
       verificationGasLimit: 10000000,
       preVerificationGas: 5000000,
@@ -133,19 +73,11 @@ export const kernelFixture = async () => {
 
   const getKernelAddress = async (
     owner: any, 
-    passkeysPubX: string, 
-    passkeysPubY: string,
-    origin: string,
-    authData: string
+    emailTwofa: any
   ) => {
     const _data = ethers.utils.concat([
       ethers.utils.arrayify(owner.address),
-      ethers.utils.arrayify(passkeysPubX),
-      ethers.utils.arrayify(passkeysPubY),
-      Buffer.from([origin.length]),
-      Buffer.from(origin),
-      Buffer.from([ethers.utils.arrayify(authData).length]),
-      ethers.utils.arrayify(authData)
+      ethers.utils.arrayify(emailTwofa.address),
     ]);
     const account = await factory.connect(owner).getAccountAddress(
       validator.address,
@@ -205,36 +137,15 @@ export const kernelFixture = async () => {
     return data;
   }
 
-  const constructNFTMintData = (receiver: string) => {
-    const abiCoder = ethers.utils.defaultAbiCoder;
-    return ethers.utils.concat([
-      "0x51945447" +
-      abiCoder.encode(
-        ["address", "uint256", "bytes", "uint8"],
-        [
-          sampleNFT.address,
-          0,
-          '0x6a627842' +
-              abiCoder.encode(['address'], [receiver]).slice(2),
-          0,
-
-        ]
-      ).slice(2)
-    ])
-  }
-
   return {
     entryPoint,
     getInitCode,
-    createKernel,
-    createECDSAKernel,
     depositEntryPoint,
     fillUserOp,
     sendUserOp,
     getKernelAddress,
     createEphemeral,
     setEphemeral,
-    constructNFTMintData,
   }
 }
 
